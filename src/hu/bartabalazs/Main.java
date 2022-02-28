@@ -5,15 +5,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-
+    private static List<Fuvar> fuvarok = beolvasas();
     public static void main(String[] args) {
-        List<Fuvar> fuvarok;
-        fuvarok = beolvasas();
-        for (Fuvar fuvar : fuvarok){
-            System.out.println(fuvar.toString());
-        }
+        System.out.println(hanyUtazasKerultfeljegyzesre());
+        System.out.println(azonosito6185TaxisBevetele());
     }
 
+    public static long hanyUtazasKerultfeljegyzesre(){
+        return fuvarok.stream().count();
+    }
+    public static double azonosito6185TaxisBevetele(){
+        return  fuvarok.stream()
+                .filter(fuvar -> fuvar.getTaxi_id() == 6185)
+                .mapToDouble(bevetel -> bevetel.getViteldij() + bevetel.getBorravalo())
+                .sum();
+    }
     private static List<Fuvar> beolvasas() {
         List<Fuvar> fuvarok = new ArrayList<>();
         try
