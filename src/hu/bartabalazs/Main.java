@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 public class Main {
     private static List<Fuvar> fuvarok = beolvasas();
     public static void main(String[] args) {
-        System.out.println(hanyUtazasKerultfeljegyzesre());
+       System.out.println(hanyUtazasKerultfeljegyzesre());
         azonosito6185TaxisBevetele();
         hanyMerfoldetTettekMegATaxisok();
         aLeghosszabbFuvarAdatai();
@@ -16,6 +16,8 @@ public class Main {
         hibasAdatok();
         letezikE1452AzonositojuTaxi();
         haromLegrovidebbUtazas();
+        december24EiFuvarokSzama();
+        szilveszteriBorravalokAranyossaga();
     }
 
     public static long hanyUtazasKerultfeljegyzesre(){
@@ -98,6 +100,25 @@ public class Main {
         {
             System.out.println(fuvar);
         }
+    }
+    public static void december24EiFuvarokSzama(){
+        int db = (int) fuvarok.stream()
+                .filter(fuvar -> fuvar.getIndulas().substring(5, 10).equals("12-24"))
+                .count();
+        System.out.println("december 24-én "+db+" fuvar volt");
+    }
+
+    public static void szilveszteriBorravalokAranyossaga(){
+        double fuvarokSzama = (double) fuvarok.stream()
+                .filter(datum -> datum.getIndulas().substring(5,10).equals("12-31"))
+                .count();
+        double borravalokOsszege = (double) fuvarok.stream()
+                .filter(datum -> datum.getIndulas().substring(5,10).equals("12-31"))
+                .mapToDouble(borravalo -> borravalo.getBorravalo())
+                .sum();
+        System.out.println(fuvarokSzama);
+        System.out.println(borravalokOsszege);
+        System.out.println("1 út alatt arányosan "+borravalokOsszege/fuvarokSzama+ "pénz borravalót adtak. Azaz 1:"+borravalokOsszege/fuvarokSzama);
     }
     private static List<Fuvar> beolvasas() {
         List<Fuvar> fuvarok = new ArrayList<>();
