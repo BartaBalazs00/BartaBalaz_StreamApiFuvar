@@ -14,6 +14,7 @@ public class Main {
         aLeghosszabbFuvarAdatai();
         aLegbokezubbBorravalojuFuvarAdatai();
         azonosito4261TaxisOsszKilometerei();
+        hibasAdatok();
     }
 
     public static long hanyUtazasKerultfeljegyzesre(){
@@ -60,7 +61,20 @@ public class Main {
         System.out.println("A 4261-os azonosítójú taxis osszesen "+ tavolsag +" km tett meg");
     }
 
-
+    public static void hibasAdatok(){
+        int db = (int) fuvarok.stream()
+                .filter(fuvar -> fuvar.getIdotartam() > 0 && fuvar.getViteldij() > 0 && fuvar.getTavolsag() == 0)
+                .count();
+        int idotartam = (int) fuvarok.stream()
+                .filter(fuvar -> fuvar.getIdotartam() > 0 && fuvar.getViteldij() > 0 && fuvar.getTavolsag() == 0)
+                .mapToDouble(ido -> ido.getIdotartam())
+                .sum();
+        int bevetel = (int) fuvarok.stream()
+                .filter(fuvar -> fuvar.getIdotartam() > 0 && fuvar.getViteldij() > 0 && fuvar.getTavolsag() == 0)
+                .mapToDouble(osszeg -> osszeg.getViteldij() + osszeg.getBorravalo())
+                .sum();
+        System.out.println("A hibás adatok száma: "+db+" db. Összes időtartalma: "+idotartam+" másodperc. Ezeknek a bevétele: "+bevetel+" pénz.");
+    }
     private static List<Fuvar> beolvasas() {
         List<Fuvar> fuvarok = new ArrayList<>();
         try
