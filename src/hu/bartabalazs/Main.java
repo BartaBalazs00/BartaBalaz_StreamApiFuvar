@@ -2,24 +2,57 @@ package hu.bartabalazs;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Main {
     private static List<Fuvar> fuvarok = beolvasas();
     public static void main(String[] args) {
         System.out.println(hanyUtazasKerultfeljegyzesre());
-        System.out.println(azonosito6185TaxisBevetele());
+        azonosito6185TaxisBevetele();
+        hanyMerfoldetTettekMegATaxisok();
+        aLeghosszabbFuvarAdatai();
+        aLegbokezubbBorravalojuFuvarAdatai();
     }
 
     public static long hanyUtazasKerultfeljegyzesre(){
         return fuvarok.stream().count();
     }
-    public static double azonosito6185TaxisBevetele(){
-        return  fuvarok.stream()
+
+    public static void azonosito6185TaxisBevetele(){
+        double osszeg =  fuvarok.stream()
                 .filter(fuvar -> fuvar.getTaxi_id() == 6185)
                 .mapToDouble(bevetel -> bevetel.getViteldij() + bevetel.getBorravalo())
                 .sum();
+        int fuvarokSzama = (int) fuvarok.stream()
+                .filter(fuvar -> fuvar.getTaxi_id() == 6185)
+                .count();
+        System.out.println("A 6185-os azonosítójú taxis "+osszeg+" pént kapott a "+fuvarokSzama+" db fuvarért");
     }
+
+    public static void hanyMerfoldetTettekMegATaxisok(){
+        double merfold = fuvarok.stream()
+                .mapToDouble(hossz -> hossz.getTavolsag())
+                .sum();
+        System.out.println("összesen "+merfold+ " mérföldet tettek meg a taxisok");
+    }
+
+    public static void aLeghosszabbFuvarAdatai(){
+        Fuvar lehosszabbFuvar = fuvarok.stream()
+                .max(Comparator.comparing(hossz -> hossz.getIdotartam()))
+                .get();
+        System.out.println("A leghosszabb fuvar adatai: "+lehosszabbFuvar.toString());
+    }
+
+    public static void aLegbokezubbBorravalojuFuvarAdatai(){
+        Fuvar legbokezubbFuvar = fuvarok.stream()
+                .max(Comparator.comparing(hossz -> hossz.getBorravalo()))
+                .get();
+        System.out.println("A legbőkezübb borravalóju fuvar adatai: "+legbokezubbFuvar.toString());
+    }
+
+
+
     private static List<Fuvar> beolvasas() {
         List<Fuvar> fuvarok = new ArrayList<>();
         try
