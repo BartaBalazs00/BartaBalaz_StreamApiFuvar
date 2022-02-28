@@ -1,9 +1,8 @@
 package hu.bartabalazs;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
     private static List<Fuvar> fuvarok = beolvasas();
@@ -15,6 +14,8 @@ public class Main {
         aLegbokezubbBorravalojuFuvarAdatai();
         azonosito4261TaxisOsszKilometerei();
         hibasAdatok();
+        letezikE1452AzonositojuTaxi();
+        haromLegrovidebbUtazas();
     }
 
     public static long hanyUtazasKerultfeljegyzesre(){
@@ -74,6 +75,29 @@ public class Main {
                 .mapToDouble(osszeg -> osszeg.getViteldij() + osszeg.getBorravalo())
                 .sum();
         System.out.println("A hibás adatok száma: "+db+" db. Összes időtartalma: "+idotartam+" másodperc. Ezeknek a bevétele: "+bevetel+" pénz.");
+    }
+
+    public static void letezikE1452AzonositojuTaxi(){
+        long taxis = fuvarok.stream()
+                .filter(taxi -> taxi.getTaxi_id() == 1452)
+                .count();
+        if (taxis != 0)
+        {
+            System.out.println("létezik 1452 id-jú taxis");
+        } else {
+            System.out.println("nem létezik 1452 id-jú taxis");
+        }
+    }
+    public static void haromLegrovidebbUtazas(){
+        List<Fuvar> legrovidebbek = fuvarok.stream()
+                .filter(ut -> ut.getIdotartam() != 0)
+                .sorted(Comparator.comparingInt(Fuvar::getIdotartam))
+                .limit(3)
+                .collect(Collectors.toList());
+        for (Fuvar fuvar: legrovidebbek)
+        {
+            System.out.println(fuvar);
+        }
     }
     private static List<Fuvar> beolvasas() {
         List<Fuvar> fuvarok = new ArrayList<>();
