@@ -13,6 +13,7 @@ public class Main {
         hanyMerfoldetTettekMegATaxisok();
         aLeghosszabbFuvarAdatai();
         aLegbokezubbBorravalojuFuvarAdatai();
+        azonosito4261TaxisOsszKilometerei();
     }
 
     public static long hanyUtazasKerultfeljegyzesre(){
@@ -51,6 +52,13 @@ public class Main {
         System.out.println("A legbőkezübb borravalóju fuvar adatai: "+legbokezubbFuvar.toString());
     }
 
+    public static void azonosito4261TaxisOsszKilometerei(){
+        double tavolsag =  fuvarok.stream()
+                .filter(fuvar -> fuvar.getTaxi_id() == 4261)
+                .mapToDouble(km -> km.getTavolsag() *1.6)
+                .sum();
+        System.out.println("A 4261-os azonosítójú taxis osszesen "+ tavolsag +" km tett meg");
+    }
 
 
     private static List<Fuvar> beolvasas() {
